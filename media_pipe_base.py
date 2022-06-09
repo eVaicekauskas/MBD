@@ -35,7 +35,11 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             #print(landmarks)
             #for lndmrk in mp_pose.PoseLandmark:
             #    print(lndmrk)
-            print(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value])
+            #print(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value])
+            kPetys = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
+                      landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y,
+                      landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].z
+                      ]
         except:
             pass  
         
