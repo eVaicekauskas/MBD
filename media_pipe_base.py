@@ -12,6 +12,8 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
 
+lWristArray = []
+
 #vaizdo transliavimas
 cap = cv2.VideoCapture(0)
 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
@@ -33,13 +35,14 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         try:
             landmarks = results.pose_landmarks.landmark
             #print(landmarks)
-            #for lndmrk in mp_pose.PoseLandmark:
-            #    print(lndmrk)
+            for lndmrk in mp_pose.PoseLandmark:
+                print(lndmrk)
             #print(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value])
-            kPetys = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
-                      landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y,
-                      landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].z
+            lWrist = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,
+                      landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y,
+                      landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].z
                       ]
+            lWristArray.append(lWrist)
         except:
             pass  
         
@@ -58,3 +61,12 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         
     cap.release()
     cv2.destroyAllWindows()
+    
+    f= open("samples/test1.txt","w+")
+    for i in range(len(lWristArray)):
+     f.write(str(lWristArray[i][0]) + ', ' + str(lWristArray[i][1]) + ', ' + str(lWristArray[i][2]))
+     f.write('\n')
+     
+    f.close()
+    
+    
