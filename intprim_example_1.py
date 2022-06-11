@@ -5,19 +5,23 @@ import csv
 # Import the library.
 import intprim
 
+from functions import *
+
+plt.close('all')
+
 # Set a seed for reproducibility
 np.random.seed(213413414)
 
 # Define some parameters used when generating synthetic data.
-num_train_trajectories = 100
+num_train_trajectories = 5
 train_translation_mean = 0.0
-train_translation_std = 10.0
-train_noise_std = 0.02
-train_length_mean = 155
-train_length_std = 30
+train_translation_std = 2.0
+train_noise_std = 0.05
+train_length_mean = 70
+train_length_std = 1
 
 # Generate some synthetic handwriting trajectories.
-training_trajectories = intprim.examples.create_2d_handwriting_data(
+training_trajectories = create_2d_data(
     num_train_trajectories,
     train_translation_mean,
     train_translation_std,
@@ -54,6 +58,8 @@ intprim.util.visualization.plot_distribution(dof_names, mean, upper_bound, lower
 
 # Set an observation noise for the demonstrations.
 observation_noise = np.diag([10000.0, train_noise_std ** 2])
+observation_noise = np.diag([1.0, train_noise_std ** 2])
+observation_noise = np.diag([1, 1])
 
 
 
@@ -72,23 +78,23 @@ filter = intprim.filter.spatiotemporal.ExtendedKalmanFilter(
 
 
 
-num_test_trajectories = 1
-test_translation_mean = 5.0
-test_translation_std = 1e-5
-test_noise_std = 5#0.01
-test_length_mean = 45
-test_length_std = 1e-5
+#num_test_trajectories = 1
+#test_translation_mean = 5.0
+#test_translation_std = 1e-5
+#test_noise_std = 0.01
+#test_length_mean = 45
+#test_length_std = 1e-5
 
 # Create test trajectories.
-test_trajectories = intprim.examples.create_2d_handwriting_data(num_test_trajectories, test_translation_mean, test_translation_std, test_noise_std, test_length_mean, test_length_std)
+#test_trajectories = create_2d_data(num_test_trajectories, test_translation_mean, test_translation_std, test_noise_std, test_length_mean, test_length_std)
 
 
-file = open("samples/lWristPoints.csv")
+file = open("samples/lWristPoints_1.csv")
 csvreader = csv.reader(file)
 rows = []
 for row in csvreader:
     rows.append([-1*float(row[0]),float(row[1])])
-print(rows)
+
 file.close()
 
 transpRows = np.transpose(rows)
@@ -97,8 +103,6 @@ transpRows = np.transpose(rows)
 test_trajectories   = [np.array(transpRows)]
 
 # Evaluate the trajectories.
-intprim.examples.evaluate_trajectories(primitive, filter, test_trajectories, observation_noise)
+#intprim.examples.evaluate_trajectories(primitive, filter, test_trajectories, observation_noise)
+evaluate_trajectories(primitive, filter, test_trajectories, observation_noise)
 
-
-
-#plt.close('all')

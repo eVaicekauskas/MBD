@@ -9,6 +9,8 @@ import cv2
 import mediapipe as mp
 import numpy as np
 
+
+import os.path
 import csv
 
 mp_drawing = mp.solutions.drawing_utils
@@ -69,7 +71,14 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
 #data = [['Alex', 62, 80], ['Brad', 45, 56], ['Joey', 85, 98]]
 data = lWristArray
 
-filename = 'samples/lWristPoints.csv'
+
+dataFileID = '0'
+
+while os.path.exists('samples/lWristPoints_' + dataFileID + '.csv'):
+    dataFileID = str(int(dataFileID)+1)
+    
+
+filename = 'samples/lWristPoints_' + dataFileID + '.csv'
 with open(filename, 'w') as file:
     
     for row in data:
