@@ -8,6 +8,9 @@ Created on Thu Jun  9 21:20:56 2022
 import cv2
 import mediapipe as mp
 import numpy as np
+
+import csv
+
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
@@ -42,7 +45,7 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                       landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y,
                       landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].z
                       ]
-            lWristArray.append(lWrist)
+            lWristArray.append([lWrist[0]*5, lWrist[1]*(-5), lWrist[2]*5])
         except:
             pass  
         
@@ -62,11 +65,23 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
     cap.release()
     cv2.destroyAllWindows()
     
-    f= open("samples/test1.txt","w+")
-    for i in range(len(lWristArray)):
-     f.write(str(lWristArray[i][0]) + ', ' + str(lWristArray[i][1]) + ', ' + str(lWristArray[i][2]))
-     f.write('\n')
-     
-    f.close()
+#header = ['Name', 'M1 Score', 'M2 Score']
+#data = [['Alex', 62, 80], ['Brad', 45, 56], ['Joey', 85, 98]]
+data = lWristArray
+
+filename = 'samples/lWristPoints.csv'
+with open(filename, 'w') as file:
+    
+    for row in data:
+        for x in row:
+            file.write(str(x)+', ')
+        file.write('\n')
+        
+    #f= open("samples/test1.txt","w+")
+    #for i in range(len(lWristArray)):
+     #f.write(str(5*lWristArray[i][0]) + ', ' + str(-5*lWristArray[i][1]) + ', ' + str(5*lWristArray[i][2]))
+     #f.write('\n')
+     #
+    #f.close()
     
     
