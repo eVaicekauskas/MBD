@@ -13,12 +13,12 @@ plt.close('all')
 np.random.seed(213413414)
 
 # Define some parameters used when generating synthetic data.
-num_train_trajectories = 5
-train_translation_mean = 0.0
-train_translation_std = 2.0
-train_noise_std = 0.05
-train_length_mean = 70
-train_length_std = 1
+num_train_trajectories = 55#55#25
+train_translation_mean = 0.15
+train_translation_std = 0.5#1.0
+train_noise_std = 0.02
+train_length_mean = 55
+train_length_std = 5#1#9
 
 # Generate some synthetic handwriting trajectories.
 training_trajectories = create_2d_data(
@@ -38,12 +38,14 @@ plt.show()
 
 
 # Define the data axis names.
-dof_names = np.array(["X (Agent 1)", "Y (Agent 2)"])
+dof_names = np.array(["X ", "Y "])
 
 # Decompose the handwriting trajectories to a basis space with 8 uniformly distributed Gaussian functions and a variance of 0.1.
-basis_model = intprim.basis.GaussianModel(8, 0.1, dof_names)
+basis_model = intprim.basis.GaussianModel(10, 0.08, dof_names)
+#basis_model = intprim.basis.SigmoidalModel(24, 0.08, dof_names)
 
 # Initialize a BIP instance.
+#primitive = intprim.BayesianInteractionPrimitive(basis_model)
 primitive = intprim.BayesianInteractionPrimitive(basis_model)
 
 # Train the model.
@@ -57,8 +59,8 @@ intprim.util.visualization.plot_distribution(dof_names, mean, upper_bound, lower
 
 
 # Set an observation noise for the demonstrations.
-observation_noise = np.diag([10000.0, train_noise_std ** 2])
-observation_noise = np.diag([1.0, train_noise_std ** 2])
+#observation_noise = np.diag([10000.0, train_noise_std ** 2])
+#observation_noise = np.diag([1.0, train_noise_std ** 2])
 observation_noise = np.diag([1, 1])
 
 
@@ -89,7 +91,14 @@ filter = intprim.filter.spatiotemporal.ExtendedKalmanFilter(
 #test_trajectories = create_2d_data(num_test_trajectories, test_translation_mean, test_translation_std, test_noise_std, test_length_mean, test_length_std)
 
 
-file = open("samples/lWristPoints_1.csv")
+dataFileID = '0'
+
+while os.path.exists('samples/chairTest/lWristPoints_' + dataFileID + '.csv'):
+    dataFileID = str(int(dataFileID)+1)
+
+dataFileID = str(int(dataFileID)-1)
+
+file = open('samples/chairTest/lWristPoints_' + dataFileID + '.csv')
 csvreader = csv.reader(file)
 rows = []
 for row in csvreader:

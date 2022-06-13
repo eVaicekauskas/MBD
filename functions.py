@@ -67,14 +67,14 @@ def create_2d_data(num_trajectories, translation_mean, translation_std, noise_st
     
     dataID = '0'
     
-    while os.path.exists('samples/lWristPoints_' + dataID + '.csv'):
+    while os.path.exists('samples/chairTest/lWristPoints_' + dataID + '.csv'):
         #dataID = str(int(dataID)+1)
     
-        filename = 'samples/lWristPoints_' + dataID + '.csv'
+        filename = 'samples/chairTest/lWristPoints_' + dataID + '.csv'
         
         with open(filename, 'r') as file:
             csvreader = csv.reader(file)
-            print(csvreader)
+            
             row = []
             xdata = []
             ydata = []
@@ -108,8 +108,9 @@ def create_2d_data(num_trajectories, translation_mean, translation_std, noise_st
         # Add 30 demonstrations which are generated from the writing sample
         for demo in range(num_trajectories):
             # Randomly generate a new length
-            demonstration_length = int(np.round(np.random.normal(length_mean, length_std)))
-    
+            #demonstration_length = int(np.round(np.random.normal(length_mean, length_std)))
+            demonstration_length = int(np.round(np.random.normal(len(xdata), length_std)))
+
             # Fit the single demonstration to the pre-defined basis model
             domain = np.linspace(0, 1, xdata.shape[0], dtype = intprim.constants.DTYPE)
             weights = basis_model.fit_basis_functions_linear_closed_form(domain, np.array([xdata, ydata]).T).T
@@ -195,8 +196,9 @@ def evaluate_trajectories(primitive, filter, test_trajectories, observation_nois
     for test_trajectory in test_trajectories:
         test_trajectory_partial = np.array(test_trajectory, copy = True)
         #test_trajectory_partial[0, :] = 0.0
-        print("we are here")
-
+        
+        
+    
         new_filter = copy.deepcopy(filter)
 
         primitive.set_filter(new_filter)
@@ -209,7 +211,8 @@ def evaluate_trajectories(primitive, filter, test_trajectories, observation_nois
         phase_mae = 0.0
         mse_count = 0
         prev_observed_index = 0
-        for observed_index in range(5, test_trajectory.shape[1], 5):
+
+        for observed_index in range(int(len(test_trajectory[1])/8), test_trajectory.shape[1], int(len(test_trajectory[1])/8)):
             gen_trajectory, phase, mean, var = primitive.generate_probable_trajectory_recursive(test_trajectory_partial[:, prev_observed_index:observed_index], observation_noise, np.array([1]), num_samples = test_trajectory_partial.shape[1] - observed_index)
 
             mse = sklearn.metrics.mean_squared_error(test_trajectory[:, observed_index:], gen_trajectory)
