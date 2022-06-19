@@ -7,7 +7,7 @@ Created on Thu Jun  9 21:20:56 2022
 
 import cv2
 import mediapipe as mp
-import numpy as np
+#import numpy as np
 
 
 import os.path
@@ -96,7 +96,7 @@ for i in range(1):
     
     filename = 'samples/chairTest/lWristPoints_' + dataFileID + '.csv'
     with open(filename, 'w') as file:
-        
+       if 0: #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         for row in data:
             for x in row:
                 file.write(str(x)+', ')

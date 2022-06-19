@@ -100,6 +100,7 @@ def create_2d_data(num_trajectories, translation_mean, translation_std, noise_st
         
     
         basis_model = intprim.basis.GaussianModel(8, 0.1, ["X", "Y"])
+
     
         # From this single example, create noisy demonstrations.
         # Approximate the original data with a basis model so that we can sub/super sample it to create

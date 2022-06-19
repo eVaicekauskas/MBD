@@ -13,7 +13,7 @@ plt.close('all')
 np.random.seed(213413414)
 
 # Define some parameters used when generating synthetic data.
-num_train_trajectories = 55#55#25
+num_train_trajectories = 2#55#55#25
 train_translation_mean = 0.15
 train_translation_std = 0.5#1.0
 train_noise_std = 0.02
@@ -43,6 +43,10 @@ dof_names = np.array(["X ", "Y "])
 # Decompose the handwriting trajectories to a basis space with 8 uniformly distributed Gaussian functions and a variance of 0.1.
 basis_model = intprim.basis.GaussianModel(10, 0.08, dof_names)
 #basis_model = intprim.basis.SigmoidalModel(24, 0.08, dof_names)
+
+domain = np.linspace(0, 1, training_trajectories[0].shape[1], dtype = intprim.constants.DTYPE)
+weights = basis_model.fit_basis_functions_linear_closed_form(domain, training_trajectories[0].T).reshape(2, 10)
+basis_model.plot_weighted(weights, dof_names)
 
 # Initialize a BIP instance.
 #primitive = intprim.BayesianInteractionPrimitive(basis_model)
